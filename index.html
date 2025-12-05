@@ -3,9 +3,799 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finding my Moon</title>
+    <title>Our Soulmate Journey 🌸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd4eb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            color: #4a4a4a;
+        }
+
+        #sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .sakura-petal {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: radial-gradient(ellipse at center, #ffb3d9 0%, #ff8fc7 50%, #ff6fb5 100%);
+            border-radius: 50% 0 50% 0;
+            opacity: 0.7;
+            pointer-events: all;
+            will-change: transform, opacity;
+            filter: drop-shadow(0 2px 4px rgba(255, 105, 180, 0.3));
+        }
+
+        .sakura-heart {
+            animation: heartPulse 0.6s ease-out forwards;
+        }
+
+        @keyframes heartPulse {
+            0% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5) rotate(20deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6fb5, #ff8fc7, #ffb3d9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: #ff6fb5;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(255, 105, 180, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .question-card.answered {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 48px rgba(255, 105, 180, 0.2);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: #ff8fc7;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-text {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: #2d2d2d;
+            margin-bottom: 20px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .critical-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6fb5, #ff8fc7);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .answer-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .answer-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 14px 24px;
+            border: 2px solid #ffb3d9;
+            background: rgba(255, 255, 255, 0.5);
+            color: #ff6fb5;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .answer-btn:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 179, 217, 0.3);
+            border-color: #ff8fc7;
+            box-shadow: 0 8px 16px rgba(255, 105, 180, 0.2);
+        }
+
+        .answer-btn.selected {
+            background: linear-gradient(135deg, #ff6fb5, #ff8fc7);
+            color: white;
+            border-color: transparent;
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(255, 105, 180, 0.4);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6fb5, #ff8fc7);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 32px rgba(255, 105, 180, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calculate-btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 40px rgba(255, 105, 180, 0.4);
+        }
+
+        .calculate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            display: none;
+            text-align: center;
+            margin-top: 60px;
+            animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .result-container.show {
+            display: block;
+        }
+
+        .heart-container {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .heart-progress {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .heart-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+        }
+
+        .heart-bg::before,
+        .heart-bg::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 160px;
+            background: rgba(255, 179, 217, 0.3);
+            border-radius: 100px 100px 0 0;
+        }
+
+        .heart-bg::before {
+            left: 50px;
+            transform: rotate(-45deg);
+            transform-origin: 0 100%;
+        }
+
+        .heart-bg::after {
+            left: 0;
+            transform: rotate(45deg);
+            transform-origin: 100% 100%;
+        }
+
+        .score-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff6fb5, #ff8fc7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            z-index: 10;
+        }
+
+        .result-message {
+            font-size: 1.5rem;
+            color: #2d2d2d;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .result-description {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+        }
+
+        .restart-btn {
+            padding: 16px 40px;
+            background: rgba(255, 255, 255, 0.7);
+            color: #ff6fb5;
+            border: 2px solid #ff6fb5;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .restart-btn:hover {
+            background: #ff6fb5;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 105, 180, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 16px;
+            }
+
+            .question-card {
+                padding: 24px;
+            }
+
+            .answer-buttons {
+                flex-direction: column;
+            }
+
+            .answer-btn {
+                min-width: 100%;
+            }
+
+            .heart-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .heart-bg {
+                width: 160px;
+                height: 160px;
+            }
+
+            .heart-bg::before,
+            .heart-bg::after {
+                width: 80px;
+                height: 128px;
+            }
+
+            .heart-bg::before {
+                left: 40px;
+            }
+
+            .score-text {
+                font-size: 2.5rem;
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6fb5, #ff8fc7, #ffb3d9);
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div id="sakura-container"></div>
     
+    <div class="container">
+        <header>
+            <h1>🌸 Soulmate Compatibility 🌸</h1>
+            <p class="subtitle">Discover if we're meant to journey through life together</p>
+        </header>
+
+        <div id="questions-container"></div>
+
+        <button class="calculate-btn" id="calculateBtn" disabled>Calculate Our Compatibility</button>
+
+        <div class="result-container" id="resultContainer">
+            <div class="heart-container">
+                <div class="heart-progress">
+                    <div class="heart-bg"></div>
+                    <div class="score-text" id="scoreText">0%</div>
+                </div>
+            </div>
+            <div class="result-message" id="resultMessage"></div>
+            <div class="result-description" id="resultDescription"></div>
+            <button class="restart-btn" onclick="location.reload()">Start Over</button>
+        </div>
+    </div>
+
+    <script>
+        // Sakura Petals Animation
+        class SakuraPetal {
+            constructor() {
+                this.element = document.createElement('div');
+                this.element.className = 'sakura-petal';
+                this.reset();
+                this.isHeart = false;
+            }
+
+            reset() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = -20;
+                this.rotation = Math.random() * 360;
+                this.speed = 1 + Math.random() * 2;
+                this.swing = Math.random() * 2 - 1;
+                this.rotationSpeed = (Math.random() - 0.5) * 2;
+                
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                this.element.style.transform = `rotate(${this.rotation}deg)`;
+            }
+
+            update() {
+                if (this.isHeart) return;
+
+                this.y += this.speed;
+                this.x += this.swing;
+                this.rotation += this.rotationSpeed;
+
+                this.element.style.transform = `translate(${this.x}px, ${this.y}px) rotate(${this.rotation}deg)`;
+
+                if (this.y > window.innerHeight + 20) {
+                    this.reset();
+                }
+            }
+
+            checkCursorCollision(mouseX, mouseY) {
+                if (this.isHeart) return;
+
+                const rect = this.element.getBoundingClientRect();
+                const petalX = rect.left + rect.width / 2;
+                const petalY = rect.top + rect.height / 2;
+                const distance = Math.sqrt((mouseX - petalX) ** 2 + (mouseY - petalY) ** 2);
+
+                if (distance < 30) {
+                    this.transformToHeart();
+                }
+            }
+
+            transformToHeart() {
+                this.isHeart = true;
+                this.element.style.borderRadius = '50% 50% 0 0';
+                this.element.style.background = 'linear-gradient(135deg, #ff1744, #ff6b9d)';
+                this.element.style.width = '20px';
+                this.element.style.height = '20px';
+                this.element.classList.add('sakura-heart');
+                
+                setTimeout(() => {
+                    this.element.remove();
+                    this.element = document.createElement('div');
+                    this.element.className = 'sakura-petal';
+                    document.getElementById('sakura-container').appendChild(this.element);
+                    this.reset();
+                    this.isHeart = false;
+                }, 600);
+            }
+        }
+
+        const sakuraContainer = document.getElementById('sakura-container');
+        const petals = [];
+        const petalCount = 30;
+
+        for (let i = 0; i < petalCount; i++) {
+            const petal = new SakuraPetal();
+            petal.y = Math.random() * window.innerHeight;
+            petals.push(petal);
+            sakuraContainer.appendChild(petal.element);
+        }
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animatePetals() {
+            petals.forEach(petal => {
+                petal.update();
+                petal.checkCursorCollision(mouseX, mouseY);
+            });
+            requestAnimationFrame(animatePetals);
+        }
+
+        animatePetals();
+
+        // Questions Data
+        const questions = [
+            {
+                id: 1,
+                text: "Are you willing to move to Japan with me someday?",
+                critical: true,
+                answers: ["Yes", "No"]
+            },
+            {
+                id: 2,
+                text: "Are you willing to learn Japanese with me?",
+                critical: true,
+                answers: ["Yes", "No"]
+            },
+            {
+                id: 3,
+                text: "Would you workout with me?",
+                answers: ["Absolutely, I love fitness", "Sometimes, if motivated", "Rarely, not my thing"]
+            },
+            {
+                id: 4,
+                text: "Would you ever stop talking to me for days when mad?",
+                answers: ["Never, communication is key", "Maybe a day to cool off", "Yes, I need space"]
+            },
+            {
+                id: 5,
+                text: "Do you like deep conversations?",
+                answers: ["Love them", "Occasionally", "Prefer light talk"]
+            },
+            {
+                id: 6,
+                text: "How important are goals to you?",
+                answers: ["Extremely important", "Somewhat important", "Not very important"]
+            },
+            {
+                id: 7,
+                text: "Are you okay with my Japan / anime / gym obsession?",
+                answers: ["Love it, share the passion", "Totally supportive", "Not really my thing"]
+            },
+            {
+                id: 8,
+                text: "Do you prefer loyalty-over-everything or attention-over-everything?",
+                answers: ["Loyalty always", "Both equally", "Attention first"]
+            },
+            {
+                id: 9,
+                text: "Do you handle arguments with communication instead of drama?",
+                answers: ["Always communicate calmly", "Try to, but emotions happen", "Drama is inevitable"]
+            },
+            {
+                id: 10,
+                text: "Do you believe in peaceful, drama-free relationships?",
+                answers: ["Absolutely", "Mostly, with minor conflicts", "Some drama is normal"]
+            },
+            {
+                id: 11,
+                text: "How do you handle jealousy?",
+                answers: ["Communicate openly", "Keep it inside mostly", "Get visibly upset"]
+            },
+            {
+                id: 12,
+                text: "Are you someone who apologizes when wrong?",
+                answers: ["Always", "Usually", "Rarely"]
+            },
+            {
+                id: 13,
+                text: "Do you respect alone time?",
+                answers: ["Completely", "Mostly", "Need constant contact"]
+            },
+            {
+                id: 14,
+                text: "Would you support your partner's long-term goals?",
+                answers: ["100% support", "Support if it aligns", "Depends on the goal"]
+            },
+            {
+                id: 15,
+                text: "Do you enjoy doing small things together like anime nights or studying?",
+                answers: ["Love quality time", "Enjoy occasionally", "Prefer separate activities"]
+            },
+            {
+                id: 16,
+                text: "Can you stay loyal during rough patches?",
+                answers: ["Always", "Most likely", "Uncertain"]
+            },
+            {
+                id: 17,
+                text: "Do you prefer honesty even when it's uncomfortable?",
+                answers: ["Always honest", "Usually honest", "Sometimes white lies are okay"]
+            }
+        ];
+
+        const answers = {};
+        let answeredCount = 0;
+        let currentQuestionIndex = 0;
+
+        // Render Questions
+        const questionsContainer = document.getElementById('questions-container');
+        
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `question-${q.id}`;
+            
+            card.innerHTML = `
+                <div class="question-number">Question ${q.id} of ${questions.length}</div>
+                <div class="question-text">
+                    ${q.text}
+                    ${q.critical ? '<span class="critical-badge">Must Match</span>' : ''}
+                </div>
+                <div class="answer-buttons" data-question="${q.id}">
+                    ${q.answers.map((answer, i) => 
+                        `<button class="answer-btn" data-answer="${i}" data-text="${answer}">${answer}</button>`
+                    ).join('')}
+                </div>
+            `;
+            
+            questionsContainer.appendChild(card);
+        });
+
+        // Show first question
+        showQuestion(currentQuestionIndex);
+
+        function showQuestion(index) {
+            const questionCard = document.getElementById(`question-${questions[index].id}`);
+            questionCard.classList.add('active');
+            
+            // Scroll to question
+            setTimeout(() => {
+                questionCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // Answer Selection
+        document.querySelectorAll('.answer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const questionId = this.parentElement.dataset.question;
+                const answerIndex = this.dataset.answer;
+                const answerText = this.dataset.text;
+                
+                // Remove previous selection
+                this.parentElement.querySelectorAll('.answer-btn').forEach(b => {
+                    b.classList.remove('selected');
+                });
+                
+                // Add selection
+                this.classList.add('selected');
+                
+                // Store answer
+                if (!answers[questionId]) {
+                    answeredCount++;
+                }
+                answers[questionId] = { index: parseInt(answerIndex), text: answerText };
+                
+                // Update progress
+                updateProgress();
+                
+                // Mark current question as answered
+                const currentCard = document.getElementById(`question-${questionId}`);
+                currentCard.classList.add('answered');
+                
+                // Show next question after a short delay
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex < questions.length) {
+                        showQuestion(currentQuestionIndex);
+                    } else {
+                        // All questions answered - enable calculate button and scroll to it
+                        document.getElementById('calculateBtn').disabled = false;
+                        document.getElementById('calculateBtn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 400);
+            });
+        });
+
+        function updateProgress() {
+            const progress = (answeredCount / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Calculate Compatibility
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            calculateCompatibility();
+        });
+
+        function calculateCompatibility() {
+            // Check critical questions
+            const q1 = answers['1'];
+            const q2 = answers['2'];
+            
+            if (q1.text === 'No' || q2.text === 'No') {
+                displayResult(0, "Not Compatible", "The foundation of our journey requires mutual commitment to Japan and learning Japanese together. Without this shared dream, compatibility cannot flourish.");
+                return;
+            }
+            
+            // Calculate score for other questions
+            let totalPoints = 0;
+            let maxPoints = 0;
+            
+            questions.forEach(q => {
+                if (!q.critical) {
+                    const answer = answers[q.id.toString()];
+                    const points = getPoints(q.id, answer.index);
+                    totalPoints += points;
+                    maxPoints += getMaxPoints(q.id);
+                }
+            });
+            
+            // Calculate percentage (cap at 99.99%)
+            let percentage = (totalPoints / maxPoints) * 100;
+            percentage = Math.min(percentage, 99.99);
+            
+            let message, description;
+            
+            if (percentage >= 90) {
+                message = "Perfect Soulmate Match! 💕";
+                description = "Our souls align beautifully! We share the same dreams, values, and vision for our future together. This is the beginning of something truly magical.";
+            } else if (percentage >= 75) {
+                message = "Amazing Compatibility! ✨";
+                description = "We have incredible compatibility! With understanding and communication, our journey together will be filled with love and growth.";
+            } else if (percentage >= 60) {
+                message = "Good Potential 🌸";
+                description = "We have solid compatibility with room to grow together. Our differences can complement each other beautifully with effort and understanding.";
+            } else {
+                message = "Some Challenges Ahead 💭";
+                description = "While we may have some fundamental differences, every relationship is a journey. Open communication and mutual respect are key.";
+            }
+            
+            displayResult(percentage, message, description);
+        }
+
+        function getPoints(questionId, answerIndex) {
+            // Scoring logic: first answer = 10 points, second = 5, third = 0
+            const scores = [10, 5, 0];
+            return scores[answerIndex] || 0;
+        }
+
+        function getMaxPoints(questionId) {
+            return 10;
+        }
+
+        function displayResult(percentage, message, description) {
+            const resultContainer = document.getElementById('resultContainer');
+            const scoreText = document.getElementById('scoreText');
+            const resultMessage = document.getElementById('resultMessage');
+            const resultDescription = document.getElementById('resultDescription');
+            
+            // Scroll to result
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Show result with animation
+            setTimeout(() => {
+                resultContainer.classList.add('show');
+                
+                // Animate score
+                let current = 0;
+                const increment = percentage / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= percentage) {
+                        current = percentage;
+                        clearInterval(timer);
+                    }
+                    scoreText.textContent = current.toFixed(2) + '%';
+                }, 30);
+                
+                resultMessage.textContent = message;
+                resultDescription.textContent = description;
+            }, 300);
+        }
+    </script>
 </body>
 </html>
